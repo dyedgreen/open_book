@@ -1,0 +1,88 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  font-family: sans-serif;
+  background: #ddd;
+}
+
+.search {
+  height: 50px;
+  width: 90%;
+  max-width: 500px;
+  display: block;
+  margin: 50px auto;
+  padding: 0 15px;
+
+  font-size: 20px;
+
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+.add {
+  height: 50px;
+  width: 90%;
+  max-width: 500px;
+  display: block;
+  margin: 0 auto;
+  padding: 0 15px;
+
+  font-size: 20px;
+
+  background: rgba(255,255,255,0.3);
+  border: none;
+  outline: none;
+}
+.button {
+  height: 50px;
+  width: 90%;
+  max-width: 500px;
+  display: block;
+  margin: 15px auto;
+  padding: 0 15px;
+
+  text-align: center;
+  line-height: 50px;
+  font-size: 20px;
+  text-decoration: none;
+
+  background: #33e;
+  color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+.list {
+  height: auto;
+  width: 90%;
+  max-width: 500px;
+  display: block;
+  margin: 50px auto;
+
+  list-style: none;
+}
+
+.list li {
+  width: 100%;
+  height: auto;
+  display: flex;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+
+  justify-content: space-between;
+}
+.list li .description,
+.list li .equation {
+  padding: 10px;
+  display: block;
+  width: 50%;
+}
+.list li .equation {
+  text-align: center;
+}

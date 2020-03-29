@@ -45,7 +45,7 @@ impl Book {
 
         // Sort the results by number of hits and retrieve all corresponding entries
         let mut results: Vec<(i64, i64)> = results.iter().map(|(id, count)| (*id, *count)).collect();
-        results.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+        results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
         Ok(results.iter().map(|(id, _)| -> Equation {
             self.conn.query_row("SELECT description, equation FROM equations WHERE id = ?", params!(id), |row| {

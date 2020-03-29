@@ -10,6 +10,7 @@ pub struct Book {
 pub struct Equation {
     description: String,
     equation: String,
+    query: String,
 }
 
 impl Book {
@@ -52,6 +53,7 @@ impl Book {
                 Ok(Equation {
                     description: row.get(0)?,
                     equation: row.get(1)?,
+                    query: query.into(),
                 })
             }).unwrap()
         }).collect())
@@ -60,8 +62,13 @@ impl Book {
 }
 
 impl Equation {
-    pub fn description(&self) -> &String {
-        &self.description
+    pub fn html_description(&self) -> String {
+        // highlight each result
+        let mut description = self.description.clone();
+        for term in self.query.split_whitespace() {
+            description = description.replace(term, &format!("<strong>{}</strong>", term));
+        }
+        description
     }
 
     pub fn html_equation(&self, display: bool) -> String {

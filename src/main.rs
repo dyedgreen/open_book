@@ -58,7 +58,7 @@ async fn main() {
             let results = book.search(&query.q).unwrap();
             warp::reply::html(results.iter().map(|eqn| format!(r#"
                 <li><div class="description">{}</div><div class="equation">{}</div></li>
-            "#, eqn.description(), eqn.html_equation(true))).collect::<String>())
+            "#, eqn.html_description(), eqn.html_equation(true))).collect::<String>())
         });
 
     // combine everything

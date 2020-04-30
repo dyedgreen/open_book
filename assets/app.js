@@ -4,7 +4,7 @@ const result = document.querySelector("#result");
 search.addEventListener("input", function() {
   (async () => {
     result.innerHTML = renderList(
-      await (await fetch("http://localhost:3030/search?q=" + encodeURIComponent(search.value))).text()
+      await (await fetch("/search?q=" + encodeURIComponent(search.value))).text()
     );
   })();
 });

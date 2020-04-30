@@ -27,6 +27,9 @@ impl Book {
     }
 
     pub fn add_equation(&self, description: &str, equation: &str) -> Result<()> {
+        if description.trim().is_empty() || equation.trim().is_empty() {
+            return Err(rusqlite::Error::InvalidQuery)
+        }
         self.conn.execute(r#"
             INSERT INTO equations (description, equation) VALUES (?, ?)
         "#, params!(description, equation))?;
@@ -46,6 +49,7 @@ impl Book {
 
         // Sort the results by number of hits and retrieve all corresponding entries
         let mut results: Vec<(i64, i64)> = results.iter().map(|(id, count)| (*id, *count)).collect();
+        results.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
         results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
         Ok(results.iter().map(|(id, _)| -> Equation {
@@ -62,21 +66,11 @@ impl Book {
 }
 
 impl Equation {
-    pub fn html_description(&self) -> String {
-        // highlight each result
-        let mut description = self.description.clone();
-        for term in self.query.split_whitespace() {
-            description = description.replace(term, &format!("<strong>{}</strong>", term));
-        }
-        description
+    pub fn description(&self) -> &String {
+        &self.description
     }
 
-    pub fn html_equation(&self, display: bool) -> String {
-        let opts = katex::Opts::builder()
-            .display_mode(display)
-            .leqno(false)
-            .throw_on_error(false)
-            .build().unwrap();
-        katex::render_with_opts(&self.equation, opts).unwrap()
+    pub fn equation(&self) -> &String {
+        &self.equation
     }
 }

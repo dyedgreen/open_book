@@ -46,8 +46,10 @@ async fn main() {
         .and(warp::query::<AddQuery>())
         .map(|query: AddQuery| {
             let book = Book::open(DB).expect("Error opening database.");
-            book.add_equation(&query.desc, &query.eqn).expect("Error adding equation.");
-            "success"
+            match book.add_equation(&query.desc, &query.eqn) {
+                Ok(_) => "success",
+                _ => "error",
+            }
         });
 
     // search endpoint
@@ -56,10 +58,23 @@ async fn main() {
         .map(|query: SearchQuery| {
             let book = Book::open(DB).expect("Error opening database.");
             let results = book.search(&query.q).unwrap();
-            warp::reply::html(results.iter().map(|eqn| format!(r#"
-                <li><div class="description">{}</div><div class="equation">{}</div></li>
-            "#, eqn.html_description(), eqn.html_equation(true))).collect::<String>())
-        });
+
+            // *pukes*
+            format!("[{}]",
+                results.iter().map(|eqn| {
+                    format!(
+                        r#"{{"description":"{}","equation":"{}"}}"#,
+                        eqn.description()
+                            .replace("\\", "\\\\")
+                            .replace("\"", "\\\""),
+                        eqn.equation()
+                            .replace("\\", "\\\\")
+                            .replace("\"", "\\\"")
+                    )
+                }).collect::<Vec<String>>().join(",")
+            )
+        })
+        .map(|reply| warp::reply::with_header(reply, "Content-Type", "application/json"));
 
     // combine everything
     let get = warp::get().and(search.or(js).or(kjs).or(css).or(kcss).or(html));
